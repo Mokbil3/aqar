@@ -52,3 +52,181 @@ button{cursor:pointer;}
 </div>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>عقار فور اول | Aqar For All</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAF6EE;--border:#E6DAC4;--teal:#0E6B57;--clay:#C1602F;--card:#fff;}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);margin:0;}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
+header{background:#fff;border-bottom:1px solid var(--border);padding:12px 0;position:sticky;top:0;z-index:50;}
+.nav{display:flex;justify-content:space-between;align-items:center;}
+.logo{display:flex;gap:10px;align-items:center;font-weight:800;}
+.btn{border:none;border-radius:999px;padding:10px 18px;font-weight:700;cursor:pointer;}
+.btn-teal{background:var(--teal);color:#fff;}.btn-clay{background:var(--clay);color:#fff;}
+.search{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;display:grid;grid-template-columns:1.2fr 1fr 1fr auto;gap:10px;margin:20px 0;}
+select,input{border:1px solid var(--border);border-radius:10px;padding:11px;width:100%;font-family:inherit;}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+.card-top{height:130px;background:linear-gradient(135deg,#0E6B57,#1aa385);padding:12px;color:#fff;display:flex;justify-content:space-between;}
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;}
+.modal{background:#fff;border-radius:16px;padding:22px;max-width:520px;width:95%;}
+.lang-switch{border:1px solid var(--border);background:#fff;border-radius:999px;padding:6px 12px;}
+</style>
+</head>
+<body>
+<header><div class="wrap nav">
+<div class="logo"><div style="width:36px;height:36px;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;border-radius:10px;">ع</div><div><div id="logo-ar">عقار فور اول</div><div style="font-size:11px;color:#666" id="logo-en">AQAR FOR ALL</div></div></div>
+<div style="display:flex;gap:8px;align-items:center">
+<button class="lang-switch" onclick="toggleLang()" id="langBtn">English</button>
+<button class="btn btn-teal" onclick="openModal()" id="addBtn">أضف عقارك مجانًا</button>
+</div>
+</div></header>
+<div class="wrap">
+<div class="search">
+<div><label id="lbl-country">🌍 الدولة - Country</label>
+<select id="f-loc" onchange="updateCities('f-loc','f-city')"><option value="">اختر الدولة - All Countries</option>
+<option value="United Arab Emirates">🇦🇪 الإمارات - United Arab Emirates</option>
+<option value="Saudi Arabia">🇸🇦 السعودية - Saudi Arabia</option>
+<option value="Egypt">🇪🇬 مصر - Egypt</option>
+<option value="Qatar">🇶🇦 قطر - Qatar</option>
+<option value="Kuwait">🇰🇼 الكويت - Kuwait</option>
+<option value="Bahrain">🇧🇭 البحرين - Bahrain</option>
+<option value="Oman">🇴🇲 عمان - Oman</option>
+<option value="Jordan">🇯🇴 الأردن - Jordan</option>
+<option value="Lebanon">🇱🇧 لبنان - Lebanon</option>
+<option value="Morocco">🇲🇦 المغرب - Morocco</option>
+<option value="Algeria">🇩🇿 الجزائر - Algeria</option>
+<option value="Tunisia">🇹🇳 تونس - Tunisia</option>
+<option value="Iraq">🇮🇶 العراق - Iraq</option>
+<option value="Palestine">🇵🇸 فلسطين - Palestine</option>
+<option value="Syria">🇸🇾 سوريا - Syria</option>
+<option value="Yemen">🇾🇪 اليمن - Yemen</option>
+<option value="Sudan">🇸🇩 السودان - Sudan</option>
+<option value="Libya">🇱🇾 ليبيا - Libya</option>
+<option value="United States">🇺🇸 أمريكا - United States</option>
+<option value="United Kingdom">🇬🇧 بريطانيا - United Kingdom</option>
+<option value="Germany">🇩🇪 ألمانيا - Germany</option>
+<option value="France">🇫🇷 فرنسا - France</option>
+<option value="Turkey">🇹🇷 تركيا - Turkey</option>
+<option value="Canada">🇨🇦 كندا - Canada</option>
+<option value="Australia">🇦🇺 أستراليا - Australia</option>
+<option value="India">🇮🇳 الهند - India</option>
+<option value="Pakistan">🇵🇰 باكستان - Pakistan</option>
+</select></div>
+<div><label id="lbl-city">المدينة - City</label>
+<select id="f-city" style="display:none"></select>
+<input id="f-city-input" style="display:none" placeholder="اكتب المدينة">
+</div>
+<div><label>نوع العقار</label><select id="f-type"><option value="">كل الأنواع</option><option>شقة</option><option>فيلا</option><option>أرض</option></select></div>
+<div style="display:flex;align-items:end"><button class="btn btn-clay" style="height:44px;width:100%" onclick="doSearch()" id="searchBtn">بحث</button></div>
+</div>
+<div class="grid" id="grid">
+<div class="card"><div class="card-top"><span>للبيع</span><span>⭐</span></div><div style="padding:14px"><b>3,200,000 جنيه</b><br>شقة 150م - التجمع الخامس<br><small>📍 مصر - القاهرة</small></div></div>
+<div class="card"><div class="card-top"><span>للإيجار</span></div><div style="padding:14px"><b>8,000 درهم</b><br>دبي مارينا<br><small>📍 الإمارات - دبي</small></div></div>
+</div>
+</div>
+<div id="overlay"><div class="modal">
+<div style="display:flex;justify-content:space-between"><h3 id="modalTitle">أضف عقارك</h3><button onclick="closeModal()">✕</button></div>
+<form style="display:grid;gap:10px;margin-top:14px" onsubmit="submitProperty(event)">
+<input required placeholder="عنوان الاعلان">
+<select required><option value="">نوع العقار</option><option>شقة</option><option>فيلا</option><option>أرض</option></select>
+<select id="s-loc" required onchange="updateCities('s-loc','s-city')"><option value="">اختر الدولة</option>
+<option value="United Arab Emirates">🇦🇪 الإمارات - United Arab Emirates</option>
+<option value="Saudi Arabia">🇸🇦 السعودية - Saudi Arabia</option>
+<option value="Egypt">🇪🇬 مصر - Egypt</option>
+<option value="Qatar">🇶🇦 قطر - Qatar</option>
+<option value="Kuwait">🇰🇼 الكويت - Kuwait</option>
+<option value="Bahrain">🇧🇭 البحرين - Bahrain</option>
+<option value="Oman">🇴🇲 عمان - Oman</option>
+<option value="Jordan">🇯🇴 الأردن - Jordan</option>
+<option value="Lebanon">🇱🇧 لبنان - Lebanon</option>
+<option value="Morocco">🇲🇦 المغرب - Morocco</option>
+<option value="Algeria">🇩🇿 الجزائر - Algeria</option>
+<option value="Tunisia">🇹🇳 تونس - Tunisia</option>
+<option value="Iraq">🇮🇶 العراق - Iraq</option>
+<option value="Palestine">🇵🇸 فلسطين - Palestine</option>
+<option value="Syria">🇸🇾 سوريا - Syria</option>
+<option value="Yemen">🇾🇪 اليمن - Yemen</option>
+<option value="Sudan">🇸🇩 السودان - Sudan</option>
+<option value="Libya">🇱🇾 ليبيا - Libya</option>
+<option value="United States">🇺🇸 أمريكا - United States</option>
+<option value="United Kingdom">🇬🇧 بريطانيا - United Kingdom</option>
+<option value="Germany">🇩🇪 ألمانيا - Germany</option>
+<option value="France">🇫🇷 فرنسا - France</option>
+<option value="Turkey">🇹🇷 تركيا - Turkey</option>
+<option value="Canada">🇨🇦 كندا - Canada</option>
+<option value="Australia">🇦🇺 أستراليا - Australia</option>
+<option value="India">🇮🇳 الهند - India</option>
+<option value="Pakistan">🇵🇰 باكستان - Pakistan</option>
+</select>
+<select id="s-city" style="display:none"></select>
+<input id="s-city-input" style="display:none" placeholder="المدينة">
+<input required id="s-price" placeholder="السعر">
+<input required placeholder="رقم الواتساب">
+<button class="btn btn-teal" type="submit" style="width:100%">إرسال للمراجعة ✅</button>
+<small style="color:#666;text-align:center">سيتم حفظ الدولة والمدينة في لوحة التحكم</small>
+</form>
+</div></div>
+<script>
+const citiesByCountry = {
+  "United Arab Emirates": ["دبي - Dubai","أبوظبي - Abu Dhabi","الشارقة - Sharjah","عجمان - Ajman","رأس الخيمة - RAK","الفجيرة - Fujairah","العين - Al Ain"],
+  "Saudi Arabia": ["الرياض - Riyadh","جدة - Jeddah","مكة - Mecca","المدينة - Medina","الدمام - Dammam","الخبر - Khobar","الطائف - Taif"],
+  "Egypt": ["القاهرة - Cairo","الإسكندرية - Alexandria","الجيزة - Giza","التجمع الخامس - New Cairo","الشيخ زايد - Sheikh Zayed"],
+  "Qatar": ["الدوحة - Doha","الوكرة - Al Wakrah","الخور - Al Khor","لوسيل - Lusail","الريان - Al Rayyan"],
+  "Kuwait": ["مدينة الكويت - Kuwait City","حولي - Hawally","السالمية - Salmiya","الفروانية - Farwaniya"],
+  "Bahrain": ["المنامة - Manama","المحرق - Muharraq","الرفاع - Riffa"],
+  "Oman": ["مسقط - Muscat","صلالة - Salalah","صحار - Sohar","نزوى - Nizwa"],
+  "Jordan": ["عمان - Amman","العقبة - Aqaba","إربد - Irbid"],
+  "Lebanon": ["بيروت - Beirut","طرابلس - Tripoli","صيدا - Sidon"],
+  "Morocco": ["الدار البيضاء - Casablanca","مراكش - Marrakech","الرباط - Rabat","فاس - Fez"]
+};
+function updateCities(countryId, cityId){
+  const country = document.getElementById(countryId).value;
+  const citySelect = document.getElementById(cityId);
+  const cityInput = document.getElementById(cityId+'-input');
+  citySelect.innerHTML = '<option value="">اختر المدينة</option>';
+  if(citiesByCountry[country]){
+    citiesByCountry[country].forEach(city => {
+      const opt = document.createElement('option'); opt.value = city; opt.textContent = city; citySelect.appendChild(opt);
+    });
+    citySelect.style.display='block'; if(cityInput) cityInput.style.display='none';
+  } else if(country){
+    citySelect.style.display='none'; if(cityInput){ cityInput.style.display='block'; cityInput.placeholder='اكتب المدينة في '+country; }
+  }
+}
+let currentLang='ar';
+function toggleLang(){
+  if(currentLang==='ar'){
+    currentLang='en'; document.documentElement.dir='ltr';
+    document.getElementById('logo-ar').textContent='Aqar For All';
+    document.getElementById('addBtn').textContent='Add Property Free';
+    document.getElementById('searchBtn').textContent='Search';
+    document.getElementById('langBtn').textContent='العربية';
+  } else {
+    currentLang='ar'; document.documentElement.dir='rtl';
+    document.getElementById('logo-ar').textContent='عقار فور اول';
+    document.getElementById('addBtn').textContent='أضف عقارك مجانًا';
+    document.getElementById('searchBtn').textContent='بحث';
+    document.getElementById('langBtn').textContent='English';
+  }
+}
+function openModal(){document.getElementById('overlay').style.display='flex';}
+function closeModal(){document.getElementById('overlay').style.display='none';}
+function doSearch(){
+  const c=document.getElementById('f-loc').value; const city=document.getElementById('f-city').value||document.getElementById('f-city-input').value;
+  alert('بحث عن: '+(c||'كل الدول')+' '+(city||''));
+}
+function submitProperty(e){
+  e.preventDefault();
+  const country=document.getElementById('s-loc').value;
+  const city=document.getElementById('s-city').value||document.getElementById('s-city-input').value;
+  alert('تم حفظ العقار! الدولة: '+country+' - المدينة: '+city+' - سيظهر في لوحة التحكم ✅');
+  closeModal();
+}
+</script>
+</body>
+</html>
