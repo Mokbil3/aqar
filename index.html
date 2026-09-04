@@ -165,8 +165,31 @@ function closeModal(){document.getElementById('overlay').style.display='none';}
 function doSearch(){
   const c=document.getElementById('f-loc').value; const city=document.getElementById('f-city').value||document.getElementById('f-city-input').value;
   alert('بحث عن: '+(c||'كل الدول')+' '+(city||''));
-}
 function submitProperty(e){
+  e.preventDefault();
+  const country = document.getElementById('s-loc').value;
+  const city = document.getElementById('s-city').value || document.getElementById('s-city-input').value;
+  const title = e.target.querySelector('input[placeholder="عنوان الاعلان"]').value;
+  const price = document.getElementById('s-price').value;
+
+  // Save to localStorage (pending approval)
+  const pending = JSON.parse(localStorage.getItem('pending_properties') || '[]');
+  const newProp = {
+    id: Date.now(),
+    title: title,
+    country: country,
+    city: city,
+    price: price,
+    status: 'pending',
+    date: new Date().toLocaleString('ar-EG')
+  };
+  pending.push(newProp);
+  localStorage.setItem('pending_properties', JSON.stringify(pending));
+
+  alert('✅ تم إرسال إعلانك للمراجعة!\nالدولة: '+country+'\nالمدينة: '+city+'\n\nسيظهر الآن في لوحة التحكم للموافقة');
+  closeModal();
+  e.target.reset();
+}
   e.preventDefault();
   const country=document.getElementById('s-loc').value;
   const city=document.getElementById('s-city').value||document.getElementById('s-city-input').value;
