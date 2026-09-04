@@ -1,63 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aqar - Find Your Property in UAE</title>
+<title>عقار فور اول | Aqar For All - كل الدول</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:Segoe UI,sans-serif;background:#f6f7f9;color:#222}
-.header{background:#fff;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.06);position:sticky;top:0}
-.logo{font-weight:800;font-size:22px;color:#0f6b4b} .logo span{color:#222}
-.btn{background:#0f6b4b;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600}
-.hero{background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9');background-size:cover;color:#fff;text-align:center;padding:80px 20px}
-.hero h1{font-size:38px;margin:0} .hero p{font-size:18px;opacity:.9}
-.search{margin:30px auto;background:#fff;padding:10px;border-radius:12px;max-width:700px;display:flex;gap:10px;flex-wrap:wrap}
-.search input, .search select{flex:1;padding:12px;border:1px solid #ddd;border-radius:8px;min-width:120px}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;padding:40px 5%}
-.card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.06)}
-.card img{width:100%;height:180px;object-fit:cover}
-.card-body{padding:15px} .price{color:#0f6b4b;font-weight:800;font-size:18px}
-.footer{background:#111;color:#aaa;text-align:center;padding:20px;margin-top:30px}
-.footer a{color:#fff}
+  :root{--bg:#FAF6EE;--bg-alt:#F1E7D6;--ink:#232A22;--ink-soft:#666F5F;--teal:#0E6B57;--teal-dark:#0A5245;--clay:#C1602F;--card:#FFFFFF;--border:#E6DAC4;--radius:16px;}
+  *{box-sizing:border-box;margin:0;padding:0;} html{scroll-behavior:smooth;} body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px;} button{font-family:inherit;cursor:pointer;}
+  header{position:sticky;top:0;z-index:50;background:rgba(250,246,238,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0;}
+  .logo{display:flex;align-items:center;gap:10px;} .logo-mark{width:38px;height:38px;border-radius:10px;background:var(--teal);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;}
+  .logo-text .ar{font-weight:800;font-size:17px;} .logo-text .en{font-size:11px;color:var(--ink-soft);}
+  nav.links{display:flex;gap:28px;font-weight:500;color:var(--ink-soft);} .cta-btn{background:var(--teal);color:#fff;border:none;padding:11px 22px;border-radius:999px;font-weight:700;}
+  .search-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-top:20px;display:grid;grid-template-columns:1.3fr 1fr 1fr auto;gap:12px;box-shadow:0 18px 40px rgba(35,42,34,.06);}
+  .field{display:flex;flex-direction:column;gap:6px;} .field label{font-size:12.5px;color:var(--ink-soft);font-weight:700;}
+  .field select,.field input{border:1px solid var(--border);border-radius:10px;padding:11px 12px;font-family:inherit;font-size:14.5px;background:var(--bg);width:100%;}
+  .search-btn{background:var(--clay);color:#fff;border:none;border-radius:10px;padding:0 26px;height:44px;font-weight:700;}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:20px;} .card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+  .card-photo{aspect-ratio:16/11;display:flex;justify-content:space-between;padding:14px;background:linear-gradient(135deg,#0E6B57,#12876E);} .badge{padding:5px 12px;border-radius:999px;font-size:12px;font-weight:700;color:#fff;} .badge.sale{background:var(--teal);} .badge.rent{background:var(--clay);}
+  .card-body{padding:16px;} .hidden{display:none!important;}
+  @media(max-width:880px){.search-panel{grid-template-columns:1fr 1fr;} .grid{grid-template-columns:1fr 1fr;} nav.links{display:none;}}
 </style>
 </head>
 <body>
-
-<div class="header">
-  <div class="logo">aqar <span>.ae</span></div>
-  <a class="btn" href="https://github.com/Mokbil3/aqar/graphs/commit-activity">Commit Activity</a>
+<header><div class="wrap nav"><div class="logo"><div class="logo-mark">ع</div><div><div class="ar">عقار فور اول</div><div class="en">AQAR FOR ALL</div></div></div><nav class="links"><a href="#">العقارات</a><a href="#">أضف عقارك</a></nav><button class="cta-btn" onclick="openSubmitModal()">أضف عقارك</button></div></header>
+<div class="wrap">
+<div class="search-panel">
+<div class="field"><label>الدولة - All Countries</label>
+<select id="f-loc">
+<option value="">اختر الدولة - 194 دولة</option>
+</select></div>
+<div class="field"><label>نوع العقار</label><select id="f-type"><option value="">كل الأنواع</option><option value="شقة">شقة</option><option value="فيلا">فيلا</option><option value="أرض">أرض</option></select></div>
+<div class="field"><label>الغرض</label><select id="f-purpose"><option value="">بيع أو إيجار</option><option value="sale">للبيع</option><option value="rent">للإيجار</option></select></div>
+<button class="search-btn" onclick="runSearch()">بحث</button>
 </div>
-
-<div class="hero">
-  <h1>Find Your Dream Property</h1>
-  <p>Best Villas, Apartments & Lands in Sharjah & Dubai</p>
-  <div class="search">
-    <select><option>Buy</option><option>Rent</option></select>
-    <select><option>Sharjah</option><option>Dubai</option><option>Ajman</option></select>
-    <input placeholder="Property Type - Villa, Apartment">
-    <a class="btn" href="#">Search</a>
-  </div>
+<div class="grid" id="listing-grid">
+<div class="card" data-type="شقة" data-purpose="sale" data-loc="مصر"><div class="card-photo"><span class="badge sale">للبيع</span></div><div class="card-body"><b>3,200,000 جنيه</b><br>شقة 150م - التجمع الخامس<br>📍 مصر</div></div>
 </div>
-
-<div class="cards">
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c">
-    <div class="card-body"><div class="price">AED 1,250,000</div><h3>3BR Villa - Al Zahia, Sharjah</h3><p>2800 sqft • Garden • Parking</p></div>
-  </div>
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9">
-    <div class="card-body"><div class="price">AED 850,000</div><h3>2BR Apartment - Al Majaz</h3><p>1450 sqft • Sea View • Gym</p></div>
-  </div>
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750">
-    <div class="card-body"><div class="price">AED 2,100,000</div><h3>4BR Villa - Tilal City</h3><p>4000 sqft • Pool • Prime Location</p></div>
-  </div>
 </div>
-
-<div class="footer">
-  © 2026 aqar.ae | Made by Mokbil3 | <a href="https://mokbil3.github.io/aqar/">mokbil3.github.io/aqar</a><br>
-  Your commits: 4 in Sep 2026
-</div>
-
-</body>
-</html>
+<script>
+function runSearch(){ const loc=document.getElementById('f-loc').value; alert('بحث عن: '+(loc||'كل الدول')); }
+function openSubmitModal(){ document.getElementById('submit-overlay').style.display='flex'; }
+function closeSubmitModal(){ document.getElementById('submit-overlay').style.display='none'; }
+</script>
+</body></html>
