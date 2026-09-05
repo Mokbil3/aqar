@@ -14,21 +14,46 @@ app.use(cookieParser());
 
 app.get("/", async (req, res) => {
   try {
-   const [rows] = await db.query(
-  "SELECT NOW() AS currentTime"
-);
+    await db.query("SELECT 1");
+
     res.json({
       success: true,
       message: "Aqar API Running",
-      database: "Connected",
-      currentTime: rows[0].current_time
+      database: "Connected"
     });
   } catch (error) {
     console.error(error);
 
     res.status(500).json({
       success: false,
-      error: error.message || String(error)
+      error: error.message
+    });
+  }
+});
+
+app.get("/create-users-table", async (req, res) => {
+  try {
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id BIGINT PRIMARY KEY AUTO_INCREMENT,
+        full_name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL,
+        role ENUM('admin','agent','owner','buyer') DEFAULT 'buyer',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    res.json({
+      success: true,
+      message: "Users table created successfully"
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      error: error.message
     });
   }
 });
