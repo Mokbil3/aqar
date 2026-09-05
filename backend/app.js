@@ -89,7 +89,7 @@ app.get("/create-properties-table", async (req, res) => {
   }
 });
 const PORT = process.env.PORT || 5000;
-
+app.use("/api/properties", propertyRoutes);
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
