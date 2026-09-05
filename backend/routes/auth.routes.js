@@ -65,5 +65,28 @@ router.post("/register", async (req, res) => {
     });
   }
 });
+router.get("/create-test-user", async (req, res) => {
+  try {
+    const hashedPassword = await bcrypt.hash("123456", 10);
 
+    await db.query(
+      "INSERT INTO users (full_name, email, password) VALUES (?, ?, ?)",
+      [
+        "Admin User",
+        `admin${Date.now()}@aqar.com`,
+        hashedPassword
+      ]
+    );
+
+    res.json({
+      success: true,
+      message: "Test user created"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
 export default router;
