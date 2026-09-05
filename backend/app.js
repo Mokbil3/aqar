@@ -60,7 +60,34 @@ app.get("/create-users-table", async (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.get("/create-properties-table", async (req, res) => {
+  try {
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS properties (
+        id BIGINT PRIMARY KEY AUTO_INCREMENT,
+        title VARCHAR(255) NOT NULL,
+        description TEXT,
+        price DECIMAL(15,2) NOT NULL,
+        country VARCHAR(100),
+        city VARCHAR(100),
+        property_type VARCHAR(100),
+        bedrooms INT DEFAULT 0,
+        bathrooms INT DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
 
+    res.json({
+      success: true,
+      message: "Properties table created successfully"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
