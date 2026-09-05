@@ -4,9 +4,7 @@ import db from "../config/db.js";
 
 const router = express.Router();
 
-/*
-   TEST ROUTE
-*/
+// Test Route
 router.get("/test", (req, res) => {
   res.json({
     success: true,
@@ -14,10 +12,15 @@ router.get("/test", (req, res) => {
   });
 });
 
-/*
-   REGISTER
-   POST /api/auth/register
-*/
+// Register Page Test
+router.get("/register", (req, res) => {
+  res.json({
+    success: true,
+    message: "Register endpoint is available. Use POST to register."
+  });
+});
+
+// Register User
 router.post("/register", async (req, res) => {
   try {
     const { full_name, email, password } = req.body;
@@ -44,11 +47,7 @@ router.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await db.query(
-      `
-      INSERT INTO users
-      (full_name, email, password)
-      VALUES (?, ?, ?)
-      `,
+      "INSERT INTO users (full_name, email, password) VALUES (?, ?, ?)",
       [full_name, email, hashedPassword]
     );
 
