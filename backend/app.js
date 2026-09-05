@@ -14,10 +14,9 @@ app.use(cookieParser());
 
 app.get("/", async (req, res) => {
   try {
-    const [rows] = await db.query(
-      "SELECT NOW() AS current_time"
-    );
-
+   const [rows] = await db.query(
+  "SELECT NOW() AS currentTime"
+);
     res.json({
       success: true,
       message: "Aqar API Running",
