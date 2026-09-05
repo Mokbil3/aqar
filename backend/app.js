@@ -90,6 +90,33 @@ app.get("/create-properties-table", async (req, res) => {
 });
 const PORT = process.env.PORT || 5000;
 app.use("/api/properties", propertyRoutes);
+app.get("/upgrade-properties-table", async (req, res) => {
+  try {
+    await db.query(`
+      ALTER TABLE properties
+      ADD COLUMN IF NOT EXISTS user_id BIGINT,
+      ADD COLUMN IF NOT EXISTS listing_type ENUM('sale','rent') DEFAULT 'sale',
+      ADD COLUMN IF NOT EXISTS status ENUM('active','sold','rented') DEFAULT 'active',
+      ADD COLUMN IF NOT EXISTS area DECIMAL(10,2) DEFAULT 0,
+      ADD COLUMN IF NOT EXISTS latitude DECIMAL(10,8),
+      ADD COLUMN IF NOT EXISTS longitude DECIMAL(11,8),
+      ADD COLUMN IF NOT EXISTS title_ar VARCHAR(255),
+      ADD COLUMN IF NOT EXISTS title_en VARCHAR(255),
+      ADD COLUMN IF NOT EXISTS description_ar TEXT,
+      ADD COLUMN IF NOT EXISTS description_en TEXT
+    `);
+
+    res.json({
+      success: true,
+      message: "Properties table upgraded"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
