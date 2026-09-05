@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-
+import db from "./config/db.js";
+``
 dotenv.config();
 
 const app = express();
@@ -11,11 +12,21 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
-app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    message: "Aqar API Running"
-  });
+app.get("/", async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT NOW() AS current_time");
+
+    res.json({
+      success: true,
+      message: "Aqar API Running",
+      time: rows[0].current_time
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
 });
 
 const PORT = process.env.PORT || 5000;
