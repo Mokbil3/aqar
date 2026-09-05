@@ -21,14 +21,15 @@ app.get("/", async (req, res) => {
       message: "Aqar API Running",
       time: rows[0].current_time
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
+catch (error) {
+  console.error(error);
 
+  res.status(500).json({
+    success: false,
+    error: error.message || String(error),
+    stack: process.env.NODE_ENV !== "production" ? error.stack : undefined
+  });
+}
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
