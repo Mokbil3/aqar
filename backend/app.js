@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import db from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
 import propertyRoutes from "./routes/property.routes.js";
+import userRoutes from "./routes/user.routes.js";
 
 dotenv.config();
 
@@ -155,12 +156,13 @@ app.get("/create-property-images-table", async (req, res) => {
 
 /*
 |--------------------------------------------------------------------------
-| ROUTES
+| API ROUTES
 |--------------------------------------------------------------------------
 */
 
 app.use("/api/auth", authRoutes);
 app.use("/api/properties", propertyRoutes);
+app.use("/api/users", userRoutes);
 
 /*
 |--------------------------------------------------------------------------
