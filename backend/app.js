@@ -163,7 +163,7 @@ app.get("/create-property-images-table", async (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/properties", propertyRoutes);
 app.use("/api/users", userRoutes);
-
+app.use("/api/favorites", favoriteRoutes);
 /*
 |--------------------------------------------------------------------------
 | SERVER
