@@ -9,7 +9,7 @@ import propertyRoutes from "./routes/property.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
 import propertyImageRoutes from "./routes/property-image.routes.js";
-import myPropertiesRoutes from "./routes/my-properties.routes.js";
+
 dotenv.config();
 
 const app = express();
@@ -167,7 +167,7 @@ app.use("/api/properties", propertyRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/favorites", favoriteRoutes);
 app.use("/api/property-images", propertyImageRoutes);
-app.use("/api/my-properties", myPropertiesRoutes);
+
 /*
 |--------------------------------------------------------------------------
 | SERVER
