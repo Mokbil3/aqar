@@ -3,38 +3,31 @@ import db from "../config/db.js";
 
 const router = express.Router();
 
-/*
-|--------------------------------------------------------------------------
-| GET ALL USERS
-|--------------------------------------------------------------------------
-*/
-
-router.get("/", async (r*q, res) => {
+router.get("/", async (req, res) => {
   try {
     const [users] = await db.query(`
-      SELEC*
+      SELECT
         id,
         full_name,
-  *     email,
+        email,
         role,
-        *reated_at
+        created_at
       FROM users
-      O*DER BY id DESC
+      ORDER BY id DESC
     `);
 
-    res.js*n({
+    res.json({
       success: true,
-      cou*t: users.length,
+      count: users.length,
       users
-    }*;
+    });
 
   } catch (error) {
-    res.sta*us(500).json({
-      success: fals*,
+    res.status(500).json({
+      success: false,
       error: error.message
-    }*;
+    });
   }
 });
 
 export default router;
-*
