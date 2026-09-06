@@ -3,12 +3,7 @@ import db from "../config/db.js";
 
 const router = express.Router();
 
-/*
-|--------------------------------------------------------------------------
-| TEST
-|--------------------------------------------------------------------------
-*/
-
+// Test
 router.get("/test", (req, res) => {
   res.json({
     success: true,
@@ -16,22 +11,12 @@ router.get("/test", (req, res) => {
   });
 });
 
-/*
-|--------------------------------------------------------------------------
-| SEARCH PROPERTIES
-|--------------------------------------------------------------------------
-*/
-
+// Search
 router.get("/search", async (req, res) => {
   try {
     const { city, country, property_type } = req.query;
 
-    let sql = `
-      SELECT *
-      FROM properties
-      WHERE 1=1
-    `;
-
+    let sql = "SELECT * FROM properties WHERE 1=1";
     const params = [];
 
     if (city) {
@@ -49,8 +34,6 @@ router.get("/search", async (req, res) => {
       params.push(property_type);
     }
 
-    sql += " ORDER BY id DESC";
-
     const [properties] = await db.query(sql, params);
 
     res.json({
@@ -58,7 +41,6 @@ router.get("/search", async (req, res) => {
       count: properties.length,
       properties
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -67,12 +49,7 @@ router.get("/search", async (req, res) => {
   }
 });
 
-/*
-|--------------------------------------------------------------------------
-| GET ALL PROPERTIES
-|--------------------------------------------------------------------------
-*/
-
+// All Properties
 router.get("/", async (req, res) => {
   try {
     const [properties] = await db.query(
@@ -84,5 +61,39 @@ router.get("/", async (req, res) => {
       count: properties.length,
       properties
     });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
 
-  } catch 
+// Property By ID
+router.get("/:id", async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      "SELECT * FROM properties WHERE id = ?",
+      [req.params.id]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Property not found"
+      });
+    }
+
+    res.json({
+      success: true,
+      property: rows[0]
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+export default router;
