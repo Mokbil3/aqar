@@ -171,7 +171,28 @@ app.use("/api/users", userRoutes);
 */
 
 const PORT = process.env.PORT || 5000;
+app.get("/create-favorites-table", async (req, res) => {
+  try {
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS favorites (
+        id BIGINT PRIMARY KEY AUTO_INCREMENT,
+        user_id BIGINT NOT NULL,
+        property_id BIGINT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
 
+    res.json({
+      success: true,
+      message: "Favorites table created successfully"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
