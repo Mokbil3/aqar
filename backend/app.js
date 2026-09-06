@@ -159,7 +159,7 @@ app.get("/create-property-images-table", async (req, res) => {
 | API ROUTES
 |--------------------------------------------------------------------------
 */
-
+app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/properties", propertyRoutes);
 app.use("/api/users", userRoutes);
