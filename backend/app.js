@@ -7,7 +7,7 @@ import db from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
 import propertyRoutes from "./routes/property.routes.js";
 import userRoutes from "./routes/user.routes.js";
-
+import dashboardRoutes from "./routes/dashboard.routes.js";
 dotenv.config();
 
 const app = express();
