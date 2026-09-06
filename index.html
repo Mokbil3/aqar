@@ -1,10 +1,306 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Aqar</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Aqar Real Estate Platform</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f6f8fc;
+}
+
+header{
+    background:#0d6efd;
+    color:white;
+    padding:20px 50px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:bold;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    margin-left:20px;
+}
+
+.hero{
+    text-align:center;
+    padding:80px 20px;
+    background:white;
+}
+
+.hero h1{
+    font-size:48px;
+    margin-bottom:15px;
+}
+
+.hero p{
+    color:#666;
+    margin-bottom:30px;
+}
+
+.search-box{
+    background:white;
+    max-width:900px;
+    margin:auto;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.search-box input,
+.search-box select{
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+.search-btn{
+    background:#0d6efd;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.section{
+    max-width:1200px;
+    margin:50px auto;
+    padding:20px;
+}
+
+.section h2{
+    margin-bottom:25px;
+}
+
+.properties{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.card img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+}
+
+.card-content{
+    padding:15px;
+}
+
+.price{
+    color:#0d6efd;
+    font-size:24px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.location{
+    color:#666;
+    margin-top:10px;
+}
+
+footer{
+    background:#111827;
+    color:white;
+    text-align:center;
+    padding:25px;
+    margin-top:50px;
+}
+
+@media(max-width:768px){
+
+.search-box{
+    grid-template-columns:1fr;
+}
+
+.hero h1{
+    font-size:32px;
+}
+
+header{
+    flex-direction:column;
+}
+
+nav{
+    margin-top:15px;
+}
+
+}
+
+</style>
 </head>
+
 <body>
-    <h1>Aqar Real Estate Platform</h1>
-    <p>Website deployment is working.</p>
+
+<header>
+
+<div class="logo">Aqar</div>
+
+<nav>
+#Home</a>
+#Properties</a>
+#Login</a>
+#Register</a>
+</nav>
+
+</header>
+
+<section class="hero">
+
+<h1>Find Your Dream Property</h1>
+
+<p>
+Buy, Sell and Rent Properties Across the Arab World
+</p>
+
+<div class="search-box">
+
+<select>
+<option>Country</option>
+<option>UAE</option>
+<option>Saudi Arabia</option>
+<option>Qatar</option>
+<option>Kuwait</option>
+<option>Oman</option>
+</select>
+
+<input type="text" placeholder="City">
+
+<select>
+<option>Property Type</option>
+<option>Villa</option>
+<option>Apartment</option>
+<option>Land</option>
+<option>Office</option>
+</select>
+
+<button class="search-btn">
+Search
+</button>
+
+</div>
+
+</section>
+
+<section class="section">
+
+<h2>Featured Properties</h2>
+
+<div class="properties">
+
+<div class="card">
+
+https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1000
+
+<div class="card-content">
+
+<div class="price">
+AED 3,500,000
+</div>
+
+<h3>Luxury Villa</h3>
+
+<p>
+Beautiful villa with premium finish and landscape garden.
+</p>
+
+<div class="location">
+Dubai, UAE
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1000
+
+<div class="card-content">
+
+<div class="price">
+AED 1,200,000
+</div>
+
+<h3>Modern Apartment</h3>
+
+<p>
+Modern apartment close to major landmarks.
+</p>
+
+<div class="location">
+Abu Dhabi, UAE
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1000
+
+<div class="card-content">
+
+<div class="price">
+SAR 2,900,000
+</div>
+
+<h3>Family Villa</h3>
+
+<p>
+Spacious villa ideal for large families.
+</p>
+
+<div class="location">
+Riyadh, Saudi Arabia
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<footer>
+
+<h3>Aqar Real Estate Platform</h3>
+
+<p>
+Property Search • Buy • Sell • Rent
+</p>
+
+</footer>
+
 </body>
 </html>
