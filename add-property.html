@@ -139,9 +139,15 @@
             <section class="form-section">
                 <h2>Photos</h2>
                 <div class="form-group">
-                    <label for="image_urls">Image URLs (one per line, first one becomes the main photo)</label>
-                    <textarea id="image_urls" rows="3" placeholder="https://example.com/photo1.jpg"></textarea>
-                    <p class="form-hint">Direct photo uploads are coming soon — for now, paste links to images hosted elsewhere.</p>
+                    <label for="image_files">Upload photos</label>
+                    <input type="file" id="image_files" accept="image/*" multiple>
+                    <p class="form-hint">The first photo you add becomes the main listing photo.</p>
+                </div>
+                <div class="image-preview-grid" id="image-preview-grid"></div>
+
+                <div class="form-group">
+                    <label for="image_urls">Or paste image URLs (one per line)</label>
+                    <textarea id="image_urls" rows="2" placeholder="https://example.com/photo.jpg"></textarea>
                 </div>
             </section>
 

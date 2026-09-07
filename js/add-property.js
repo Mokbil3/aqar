@@ -1,7 +1,87 @@
 // Adjust this if your backend runs somewhere other than Railway
 const API_BASE = "https://aqar-production-b2a2.up.railway.app/api";
 
+// Cloudinary — free image hosting, uploads go straight from the browser
+const CLOUDINARY_CLOUD_NAME = "oim2xqmi";
+const CLOUDINARY_UPLOAD_PRESET = "aqar_uploads";
+
 let formOptions = null;
+let uploadedImages = []; // array of { url, uploading } in display order
+
+function renderImagePreviews() {
+    const grid = document.getElementById("image-preview-grid");
+    grid.innerHTML = "";
+
+    uploadedImages.forEach((img, index) => {
+        const item = document.createElement("div");
+        item.className = "image-preview-item" + (img.uploading ? " uploading" : "");
+
+        if (img.previewSrc) {
+            const imgEl = document.createElement("img");
+            imgEl.src = img.previewSrc;
+            item.appendChild(imgEl);
+        }
+
+        if (!img.uploading) {
+            const removeBtn = document.createElement("button");
+            removeBtn.type = "button";
+            removeBtn.className = "remove-btn";
+            removeBtn.textContent = "×";
+            removeBtn.addEventListener("click", () => {
+                uploadedImages.splice(index, 1);
+                renderImagePreviews();
+            });
+            item.appendChild(removeBtn);
+        }
+
+        grid.appendChild(item);
+    });
+}
+
+async function uploadToCloudinary(file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+    const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+        { method: "POST", body: formData }
+    );
+
+    const data = await res.json();
+
+    if (!data.secure_url) {
+        throw new Error(data.error?.message || "Upload failed");
+    }
+
+    return data.secure_url;
+}
+
+function setupImageUpload() {
+    document.getElementById("image_files").addEventListener("change", async (e) => {
+        const files = Array.from(e.target.files);
+        e.target.value = ""; // allow selecting the same file again later
+
+        for (const file of files) {
+            const localPreview = URL.createObjectURL(file);
+            const entry = { url: null, previewSrc: localPreview, uploading: true };
+            uploadedImages.push(entry);
+            renderImagePreviews();
+
+            try {
+                const url = await uploadToCloudinary(file);
+                entry.url = url;
+                entry.uploading = false;
+            } catch (error) {
+                console.error("Image upload failed:", error);
+                uploadedImages = uploadedImages.filter((img) => img !== entry);
+                showMessage(`One photo failed to upload: ${error.message}`, "error");
+            }
+
+            renderImagePreviews();
+        }
+    });
+}
 
 function requireLogin() {
     const token = localStorage.getItem("aqar_token");
@@ -111,10 +191,16 @@ function setupFormSubmit(token) {
         button.disabled = true;
         showMessage("", "");
 
-        const imageUrls = document.getElementById("image_urls").value
+        const uploadedUrls = uploadedImages
+            .filter((img) => img.url && !img.uploading)
+            .map((img) => img.url);
+
+        const pastedUrls = document.getElementById("image_urls").value
             .split("\n")
             .map((line) => line.trim())
             .filter((line) => line.length > 0);
+
+        const imageUrls = [...uploadedUrls, ...pastedUrls];
 
         const featureIds = Array.from(document.querySelectorAll(".feature-checkbox:checked"))
             .map((cb) => Number(cb.value));
@@ -173,5 +259,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!token) return;
 
     loadFormOptions();
+    setupImageUpload();
     setupFormSubmit(token);
 });
