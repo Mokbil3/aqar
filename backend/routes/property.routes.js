@@ -1,5 +1,6 @@
 import express from "express";
 import db from "../config/db.js";
+import requireAuth from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
@@ -45,6 +46,182 @@ router.get("/test", (req, res) => {
     success: true,
     message: "Property Route Working"
   });
+});
+
+/*
+|--------------------------------------------------------------------------
+| Meta — reference data the add-property form needs for its dropdowns.
+| Must be defined before GET /:id, or Express would treat "meta" as an id.
+|--------------------------------------------------------------------------
+*/
+router.get("/meta/form-options", async (req, res) => {
+  try {
+    const [propertyTypes] = await db.query(
+      "SELECT id, name_en FROM property_types ORDER BY name_en"
+    );
+    const [cities] = await db.query(
+      "SELECT id, name_en FROM cities ORDER BY name_en"
+    );
+    const [districts] = await db.query(
+      "SELECT id, city_id, name_en FROM districts ORDER BY name_en"
+    );
+    const [neighborhoods] = await db.query(
+      "SELECT id, district_id, name_en FROM neighborhoods ORDER BY name_en"
+    );
+    const [features] = await db.query(
+      "SELECT id, name_en, icon_class FROM features ORDER BY name_en"
+    );
+
+    res.json({
+      success: true,
+      propertyTypes,
+      cities,
+      districts,
+      neighborhoods,
+      features
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/*
+|--------------------------------------------------------------------------
+| Create a property — requires login.
+| Only city_id / district_id / neighborhood_id are supplied by the form;
+| state_id and country_id are derived automatically from the chosen city
+| so the form doesn't need to ask for the whole location hierarchy.
+|--------------------------------------------------------------------------
+*/
+router.post("/", requireAuth, async (req, res) => {
+  const connection = await db.getConnection();
+
+  try {
+    const {
+      title_en,
+      title_ar,
+      description_en,
+      description_ar,
+      city_id,
+      district_id,
+      neighborhood_id,
+      property_type_id,
+      purpose,
+      price,
+      currency,
+      bedrooms,
+      bathrooms,
+      parking_spaces,
+      area,
+      plot_area,
+      year_built,
+      furnished,
+      address,
+      images,
+      feature_ids
+    } = req.body;
+
+    if (!title_en || !city_id || !district_id || !neighborhood_id ||
+        !property_type_id || !purpose || !price) {
+      connection.release();
+      return res.status(400).json({
+        success: false,
+        message: "title_en, city_id, district_id, neighborhood_id, property_type_id, purpose, and price are required"
+      });
+    }
+
+    // Derive state_id and country_id from the chosen city
+    const [[city]] = await connection.query(
+      `SELECT c.id, c.state_id, s.country_id
+       FROM cities c
+       JOIN states s ON s.id = c.state_id
+       WHERE c.id = ?`,
+      [city_id]
+    );
+
+    if (!city) {
+      connection.release();
+      return res.status(400).json({ success: false, message: "Invalid city_id" });
+    }
+
+    await connection.beginTransaction();
+
+    const [result] = await connection.query(
+      `INSERT INTO properties (
+        user_id, title_en, title_ar, description_en, description_ar,
+        country_id, state_id, city_id, district_id, neighborhood_id,
+        property_type_id, purpose, price, currency,
+        bedrooms, bathrooms, parking_spaces, area, plot_area, year_built,
+        furnished, address, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'available')`,
+      [
+        req.user.id,
+        title_en,
+        title_ar || title_en,
+        description_en || null,
+        description_ar || null,
+        city.country_id,
+        city.state_id,
+        city_id,
+        district_id,
+        neighborhood_id,
+        property_type_id,
+        purpose,
+        price,
+        currency || "AED",
+        bedrooms || 0,
+        bathrooms || 0,
+        parking_spaces || 0,
+        area || null,
+        plot_area || null,
+        year_built || null,
+        Boolean(furnished),
+        address || null
+      ]
+    );
+
+    const propertyId = result.insertId;
+
+    if (Array.isArray(images) && images.length > 0) {
+      const imageRows = images
+        .filter((url) => url && url.trim())
+        .map((url, index) => [propertyId, url.trim(), index === 0, index]);
+
+      if (imageRows.length > 0) {
+        await connection.query(
+          "INSERT INTO property_images (property_id, image_url, is_primary, sort_order) VALUES ?",
+          [imageRows]
+        );
+      }
+    }
+
+    if (Array.isArray(feature_ids) && feature_ids.length > 0) {
+      const featureRows = feature_ids.map((featureId) => [propertyId, featureId]);
+      await connection.query(
+        "INSERT INTO property_features (property_id, feature_id) VALUES ?",
+        [featureRows]
+      );
+    }
+
+    await connection.commit();
+    connection.release();
+
+    res.status(201).json({
+      success: true,
+      message: "Property created",
+      propertyId
+    });
+  } catch (error) {
+    await connection.rollback();
+    connection.release();
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
 });
 
 // Search

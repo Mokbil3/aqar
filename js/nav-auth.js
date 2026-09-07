@@ -25,6 +25,7 @@ function renderNavAuth() {
 
     container.innerHTML = `
         <span class="nav-greeting">Hi, ${user.first_name}</span>
+        <a href="add-property.html">List a property</a>
         <a href="dashboard.html">Dashboard</a>
         <a href="#" id="logout-link">Logout</a>
     `;
