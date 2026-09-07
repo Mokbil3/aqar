@@ -1,0 +1,130 @@
+:root {
+    --color-bg: #F6F2EA;
+    --color-ink: #1E2A38;
+    --color-ink-soft: #4B5768;
+    --color-accent: #B8863B;
+    --color-line: #DCD3C3;
+    --color-card: #FFFFFF;
+    --color-error: #B3392C;
+    --color-success: #3E7A4C;
+
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+a { color: var(--color-accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.auth-logo {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: var(--color-ink) !important;
+    margin-bottom: 28px;
+    text-decoration: none !important;
+}
+
+.auth-card {
+    background: var(--color-card);
+    border: 1px solid var(--color-line);
+    width: 100%;
+    max-width: 420px;
+    padding: 36px;
+}
+
+.auth-card h1 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.6rem;
+    margin: 0 0 6px;
+    text-align: center;
+}
+
+.auth-subtitle {
+    text-align: center;
+    color: var(--color-ink-soft);
+    font-size: 0.9rem;
+    margin: 0 0 28px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.form-group { margin-bottom: 16px; }
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--color-line);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    background: #fff;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+}
+
+.btn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    font-size: 0.95rem;
+    cursor: pointer;
+    margin-top: 6px;
+}
+
+.btn-primary {
+    background: var(--color-accent);
+    color: #fff;
+}
+
+.btn-primary:hover { background: #9C7332; }
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.message {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.message.success { color: var(--color-success); }
+.message.error { color: var(--color-error); }
+
+.auth-footer {
+    text-align: center;
+    margin-top: 22px;
+    font-size: 0.9rem;
+    color: var(--color-ink-soft);
+}

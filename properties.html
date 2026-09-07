@@ -1,112 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Properties | Aqar</title>
 
-<title>Aqar Properties</title>
-
-<style>
-body{
-    font-family:Arial,sans-serif;
-    background:#f5f7fa;
-    margin:0;
-}
-
-header{
-    background:#0d6efd;
-    color:white;
-    padding:20px;
-}
-
-.grid{
-    padding:20px;
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-    gap:20px;
-}
-
-.card{
-    background:white;
-    border-radius:12px;
-    overflow:hidden;
-    box-shadow:0 5px 15px rgba(0,0,0,.08);
-}
-
-.card img{
-    width:100%;
-    height:220px;
-    object-fit:cover;
-}
-
-.content{
-    padding:15px;
-}
-
-.price{
-    font-size:24px;
-    font-weight:bold;
-    color:#0d6efd;
-}
-
-a{
-    text-decoration:none;
-    color:inherit;
-}
-</style>
-
+    <link rel="stylesheet" href="css/properties.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<header>
-<h2>Aqar Properties</h2>
-</header>
+    <header class="navbar">
+        <div class="logo">Aqar</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="properties.html">Properties</a>
+            <span id="nav-auth"></span>
+        </nav>
+    </header>
 
-<div id="properties" class="grid"></div>
+    <section class="page-header">
+        <h1>Find your next property</h1>
+        <p>Browse listings for sale and for rent across the UAE</p>
+    </section>
 
-<script>
+    <section class="filter-bar">
+        <select id="filter-purpose">
+            <option value="">Sale or rent</option>
+            <option value="sale">For sale</option>
+            <option value="rent">For rent</option>
+        </select>
 
-const API =
-"https://aqar-production-b2a2.up.railway.app/api/properties";
+        <input type="text" id="filter-city" placeholder="City (e.g. Dubai)">
 
-async function loadProperties() {
+        <input type="number" id="filter-min-price" placeholder="Min price">
+        <input type="number" id="filter-max-price" placeholder="Max price">
 
-    const response = await fetch(API);
-    const data = await response.json();
+        <input type="number" id="filter-bedrooms" placeholder="Min bedrooms">
 
-    const container =
-    document.getElementById("properties");
+        <button id="filter-apply" class="btn btn-primary">Search</button>
+        <button id="filter-clear" class="btn btn-outline">Clear</button>
+    </section>
 
-    container.innerHTML = "";
+    <main class="listing-grid" id="listing-grid">
+        <p class="listing-status">Loading properties…</p>
+    </main>
 
-    data.properties.forEach(property => {
+    <footer class="site-footer">
+        <p>&copy; 2026 Aqar. All rights reserved.</p>
+        <div class="footer-social">
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+    </footer>
 
-        container.innerHTML += `
-        <a href="property-details.html?id=${property.id}">
-            <div class="card">
-
-                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1000">
-
-                <div class="content">
-
-                    <div class="price">
-                        ${property.price}
-                    </div>
-
-                    <h3>${property.title}</h3>
-
-                    <p>${property.city}, ${property.country}</p>
-
-                </div>
-            </div>
-        </a>
-        `;
-    });
-}
-
-loadProperties();
-
-</script>
+    <script src="js/nav-auth.js" defer></script>
+    <script src="js/properties.js" defer></script>
 
 </body>
 </html>

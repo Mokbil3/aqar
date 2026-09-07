@@ -326,4 +326,158 @@ CREATE TABLE properties (
     views_count BIGINT DEFAULT 0,
 
     status ENUM(
-        'available
+        'available',
+        'reserved',
+        'sold',
+        'rented',
+        'draft'
+    ) DEFAULT 'available',
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_property_user
+        FOREIGN KEY(user_id)
+        REFERENCES users(id)
+        ON DELETE SET NULL,
+
+    CONSTRAINT fk_property_agency
+        FOREIGN KEY(agency_id)
+        REFERENCES agencies(id)
+        ON DELETE SET NULL,
+
+    CONSTRAINT fk_property_agent
+        FOREIGN KEY(agent_id)
+        REFERENCES agents(id)
+        ON DELETE SET NULL,
+
+    CONSTRAINT fk_property_country
+        FOREIGN KEY(country_id)
+        REFERENCES countries(id),
+
+    CONSTRAINT fk_property_state
+        FOREIGN KEY(state_id)
+        REFERENCES states(id),
+
+    CONSTRAINT fk_property_city
+        FOREIGN KEY(city_id)
+        REFERENCES cities(id),
+
+    CONSTRAINT fk_property_district
+        FOREIGN KEY(district_id)
+        REFERENCES districts(id),
+
+    CONSTRAINT fk_property_neighborhood
+        FOREIGN KEY(neighborhood_id)
+        REFERENCES neighborhoods(id),
+
+    CONSTRAINT fk_property_type
+        FOREIGN KEY(property_type_id)
+        REFERENCES property_types(id),
+
+    INDEX idx_properties_purpose (purpose),
+    INDEX idx_properties_status (status),
+    INDEX idx_properties_city (city_id),
+    INDEX idx_properties_price (price)
+);
+
+-- ============================================================
+-- PROPERTY IMAGES
+-- One property can have many photos; is_primary marks the hero image.
+-- ============================================================
+
+CREATE TABLE property_images (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+    property_id BIGINT NOT NULL,
+
+    image_url VARCHAR(500) NOT NULL,
+    alt_text_en VARCHAR(255),
+    alt_text_ar VARCHAR(255),
+
+    is_primary BOOLEAN DEFAULT FALSE,
+    sort_order INT DEFAULT 0,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_image_property
+        FOREIGN KEY(property_id)
+        REFERENCES properties(id)
+        ON DELETE CASCADE,
+
+    INDEX idx_images_property (property_id)
+);
+
+-- ============================================================
+-- FEATURES (master list of amenities, e.g. "Private pool")
+-- ============================================================
+
+CREATE TABLE features (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+    name_en VARCHAR(150) NOT NULL,
+    name_ar VARCHAR(150) NOT NULL,
+
+    icon_class VARCHAR(100)
+    -- e.g. "fa-solid fa-person-swimming", matches Font Awesome classes
+    -- already loaded on property.html
+);
+
+-- ============================================================
+-- PROPERTY FEATURES (junction table: which features apply to which property)
+-- ============================================================
+
+CREATE TABLE property_features (
+    property_id BIGINT NOT NULL,
+    feature_id BIGINT NOT NULL,
+
+    PRIMARY KEY (property_id, feature_id),
+
+    CONSTRAINT fk_pf_property
+        FOREIGN KEY(property_id)
+        REFERENCES properties(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_pf_feature
+        FOREIGN KEY(feature_id)
+        REFERENCES features(id)
+        ON DELETE CASCADE
+);
+
+-- ============================================================
+-- INQUIRIES (contact-agent / request-a-viewing form submissions)
+-- ============================================================
+
+CREATE TABLE inquiries (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+    property_id BIGINT NOT NULL,
+    user_id BIGINT NULL,
+
+    name VARCHAR(150) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(50),
+
+    message TEXT,
+
+    status ENUM(
+        'new',
+        'contacted',
+        'closed'
+    ) DEFAULT 'new',
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_inquiry_property
+        FOREIGN KEY(property_id)
+        REFERENCES properties(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_inquiry_user
+        FOREIGN KEY(user_id)
+        REFERENCES users(id)
+        ON DELETE SET NULL,
+
+    INDEX idx_inquiries_property (property_id)
+);

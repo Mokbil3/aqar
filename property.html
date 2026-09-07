@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palm Jumeirah Villa | Aqar</title>
+    <title>Property Details | Aqar</title>
 
     <link rel="stylesheet" href="css/property.css">
     <link rel="stylesheet"
@@ -19,16 +19,15 @@
         <nav>
             <a href="index.html">Home</a>
             <a href="properties.html">Properties</a>
-            <a href="dashboard.html">Dashboard</a>
+            <span id="nav-auth"></span>
         </nav>
     </header>
 
     <section class="hero">
-        <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1600&q=80"
-             alt="Villa exterior with private pool, Palm Jumeirah">
+        <img id="hero-image" src="" alt="Property photo">
         <div class="hero-overlay">
-            <p class="hero-location"><i class="fas fa-location-dot"></i> Palm Jumeirah, Dubai</p>
-            <h1>Frond M Signature Villa</h1>
+            <p class="hero-location"><i class="fas fa-location-dot"></i> <span id="property-location">Loading…</span></p>
+            <h1 id="property-title">Loading…</h1>
         </div>
     </section>
 
@@ -37,47 +36,27 @@
         <div class="property-main">
 
             <ul class="facts-row">
-                <li><i class="fas fa-bed"></i> 5 Bedrooms</li>
-                <li><i class="fas fa-bath"></i> 6 Bathrooms</li>
-                <li><i class="fas fa-ruler-combined"></i> 8,200 sq ft</li>
-                <li><i class="fas fa-water"></i> Private beach</li>
+                <li><i class="fas fa-bed"></i> <span id="fact-bedrooms">—</span></li>
+                <li><i class="fas fa-bath"></i> <span id="fact-bathrooms">—</span></li>
+                <li><i class="fas fa-ruler-combined"></i> <span id="fact-area">—</span></li>
+                <li><i class="fas fa-tag"></i> <span id="fact-purpose">—</span></li>
             </ul>
 
             <section class="property-section">
-                <h2>About this villa</h2>
-                <p>
-                    Set on a signature frond of Palm Jumeirah, this fully upgraded villa
-                    pairs a private beach with unobstructed views across the Arabian Gulf.
-                    The layout opens onto a landscaped garden and infinity pool, with a
-                    separate staff annex and a four-car covered driveway. Recently
-                    renovated by the current owner, the interiors keep the original
-                    Atlantis-facing orientation that made this frond one of the most
-                    requested on the island.
-                </p>
+                <h2>About this property</h2>
+                <p id="property-description">Loading description…</p>
             </section>
 
             <section class="property-section">
                 <h2>Amenities</h2>
-                <ul class="amenities-grid">
-                    <li><i class="fas fa-person-swimming"></i> Private infinity pool</li>
-                    <li><i class="fas fa-umbrella-beach"></i> Direct beach access</li>
-                    <li><i class="fas fa-car"></i> 4-car covered parking</li>
-                    <li><i class="fas fa-house-user"></i> Staff annex</li>
-                    <li><i class="fas fa-shield-halved"></i> Gated community security</li>
-                    <li><i class="fas fa-kitchen-set"></i> Fully fitted kitchen</li>
-                    <li><i class="fas fa-dumbbell"></i> Home gym</li>
-                    <li><i class="fas fa-snowflake"></i> Central air conditioning</li>
+                <ul class="amenities-grid" id="amenities-list">
+                    <li>Loading amenities…</li>
                 </ul>
             </section>
 
             <section class="property-section">
                 <h2>Location</h2>
-                <p>
-                    Frond M sits close to the Palm's main trunk, putting Nakheel Mall,
-                    Atlantis The Palm, and the monorail station within a five-minute
-                    drive. Dubai Marina and Sheikh Zayed Road are reachable in under
-                    fifteen minutes.
-                </p>
+                <p id="location-address">Loading location…</p>
                 <div class="map-placeholder">
                     <i class="fas fa-map-location-dot"></i>
                     <span>Map view available on request</span>
@@ -88,25 +67,24 @@
 
         <aside class="property-sidebar">
             <div class="price-card">
-                <p class="price-label">Asking price</p>
-                <p class="price">AED 2,500,000</p>
-                <p class="price-per-sqft">AED 305 / sq ft</p>
+                <p class="price-label" id="price-label">Asking price</p>
+                <p class="price" id="price">—</p>
+                <p class="price-per-sqft" id="price-per-sqft"></p>
 
                 <hr>
 
                 <div class="agent">
-                    <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200&q=80"
-                         alt="Portrait of listing agent Sara Al Mansoori">
+                    <img id="agent-avatar" src="" alt="Listing agent">
                     <div>
-                        <p class="agent-name">Sara Al Mansoori</p>
+                        <p class="agent-name" id="agent-name">—</p>
                         <p class="agent-role">Listing agent, Aqar</p>
                     </div>
                 </div>
 
-                <a href="tel:+97141234567" class="btn btn-outline">
+                <a href="#" id="call-agent-btn" class="btn btn-outline">
                     <i class="fas fa-phone"></i> Call agent
                 </a>
-                <a href="mailto:sara@aqar.ae" class="btn btn-primary">
+                <a href="#" id="email-agent-btn" class="btn btn-primary">
                     Request a viewing
                 </a>
             </div>
@@ -122,6 +100,9 @@
             <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
         </div>
     </footer>
+
+    <script src="js/nav-auth.js" defer></script>
+    <script src="js/property.js" defer></script>
 
 </body>
 </html>
