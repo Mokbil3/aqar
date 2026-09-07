@@ -1,5 +1,5 @@
 // Adjust this if your backend runs somewhere other than localhost:5000
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "https://aqar-production-b2a2.up.railway.app/api";
 
 function formatNumber(value) {
     return Number(value).toLocaleString("en-US");
