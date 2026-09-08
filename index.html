@@ -11,6 +11,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d6efd">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <style>
         #langToggleBtn{
             background:transparent;
@@ -243,6 +247,19 @@
 
         populateCountryDropdown();
         applySiteLanguage();
+
+        // Register service worker for installable/offline support
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", function() {
+                navigator.serviceWorker.register("service-worker.js")
+                    .then(function(reg) {
+                        console.log("Service worker registered:", reg.scope);
+                    })
+                    .catch(function(err) {
+                        console.warn("Service worker registration failed:", err);
+                    });
+            });
+        }
     </script>
     <script src="js/nav-auth.js" defer></script>
     <script src="js/index.js" defer></script>
