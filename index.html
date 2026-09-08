@@ -48,7 +48,12 @@
                     <option value="sale" id="optSale">For sale</option>
                     <option value="rent" id="optRent">For rent</option>
                 </select>
-                <input type="text" id="search-city" placeholder="City (e.g. Dubai)">
+                <select id="search-country">
+                    <option value="" id="optCountry">Country</option>
+                </select>
+                <select id="search-city">
+                    <option value="" id="optCity">City</option>
+                </select>
                 <select id="search-type">
                     <option value="" id="optType">Property type</option>
                     <option value="Villa" id="optVilla">Villa</option>
@@ -80,7 +85,66 @@
     </footer>
     <script>
         const htmlRoot = document.getElementById("htmlRoot");
-        const cityInput = document.getElementById("search-city");
+
+        // Cities grouped by Arab League country
+        const arabCities = {
+            "United Arab Emirates": ["Dubai","Abu Dhabi","Sharjah","Ajman","Ras Al Khaimah","Fujairah","Umm Al Quwain","Al Ain","Khor Fakkan","Dibba Al-Fujairah"],
+            "Saudi Arabia": ["Riyadh","Jeddah","Mecca","Medina","Dammam","Khobar","Taif","Abha","Tabuk","Jubail","Najran","Hail"],
+            "Egypt": ["Cairo","Alexandria","Giza","Sharm El Sheikh","Luxor","Aswan","Hurghada","Mansoura","Tanta","Port Said","Suez","Ismailia"],
+            "Qatar": ["Doha","Al Wakrah","Al Khor","Al Rayyan","Umm Salal","Lusail","Mesaieed","Dukhan","Al Shamal","Al Daayen"],
+            "Kuwait": ["Kuwait City","Hawalli","Salmiya","Jahra","Farwaniya","Ahmadi","Fahaheel","Mangaf","Sabahiya","Mishref"],
+            "Bahrain": ["Manama","Muharraq","Riffa","Hamad Town","A'ali","Isa Town","Sitra","Budaiya","Jidhafs","Sanad"],
+            "Oman": ["Muscat","Salalah","Sohar","Nizwa","Sur","Ibri","Rustaq","Barka","Seeb","Bahla"],
+            "Jordan": ["Amman","Zarqa","Irbid","Aqaba","Salt","Madaba","Karak","Jerash","Mafraq","Ajloun"],
+            "Lebanon": ["Beirut","Tripoli","Sidon","Tyre","Byblos","Zahle","Jounieh","Baalbek","Nabatieh","Batroun"],
+            "Iraq": ["Baghdad","Basra","Mosul","Erbil","Najaf","Karbala","Kirkuk","Sulaymaniyah","Nasiriyah","Fallujah"],
+            "Syria": ["Damascus","Aleppo","Homs","Latakia","Hama","Tartus","Daraa","Deir ez-Zor","Idlib","Raqqa"],
+            "Palestine": ["Ramallah","Gaza City","Hebron","Nablus","Bethlehem","Jenin","Jericho","Khan Yunis","Tulkarm","Rafah"],
+            "Yemen": ["Sanaa","Aden","Taiz","Hodeidah","Mukalla","Ibb","Dhamar","Zabid","Marib","Saada"],
+            "Morocco": ["Casablanca","Rabat","Marrakesh","Fes","Tangier","Agadir","Meknes","Oujda","Kenitra","Tetouan"],
+            "Algeria": ["Algiers","Oran","Constantine","Annaba","Blida","Batna","Setif","Sidi Bel Abbes","Biskra","Tlemcen"],
+            "Tunisia": ["Tunis","Sfax","Sousse","Kairouan","Bizerte","Gabes","Ariana","Gafsa","Monastir","Nabeul"],
+            "Libya": ["Tripoli","Benghazi","Misrata","Zawiya","Bayda","Zliten","Ajdabiya","Sabha","Tobruk","Derna"],
+            "Sudan": ["Khartoum","Omdurman","Port Sudan","Kassala","Nyala","El Obeid","Gedaref","Atbara","Wad Madani","Kosti"],
+            "Somalia": ["Mogadishu","Hargeisa","Bosaso","Kismayo","Baidoa","Berbera","Merca","Galkayo","Jowhar","Beledweyne"],
+            "Mauritania": ["Nouakchott","Nouadhibou","Rosso","Kaedi","Zouerate","Atar","Kiffa","Selibaby","Akjoujt","Aleg"],
+            "Djibouti": ["Djibouti City","Ali Sabieh","Dikhil","Tadjoura","Obock","Arta","Holhol","Dorra","Randa","Yoboki"],
+            "Comoros": ["Moroni","Mutsamudu","Fomboni","Domoni","Tsimbeo","Ouani","Sima","Mitsamiouli","Mramani","Nioumachoua"]
+        };
+
+        function populateCountryDropdown(){
+            const countrySelect = document.getElementById("search-country");
+            Object.keys(arabCities).forEach(function(country){
+                const opt = document.createElement("option");
+                opt.value = country;
+                opt.innerText = country;
+                countrySelect.appendChild(opt);
+            });
+        }
+
+        function populateCityDropdown(country){
+            const citySelect = document.getElementById("search-city");
+            citySelect.innerHTML = "";
+            const t = siteTranslations[currentLang];
+
+            const placeholderOpt = document.createElement("option");
+            placeholderOpt.value = "";
+            placeholderOpt.innerText = t.optCity;
+            citySelect.appendChild(placeholderOpt);
+
+            if (country && arabCities[country]){
+                arabCities[country].forEach(function(city){
+                    const opt = document.createElement("option");
+                    opt.value = city;
+                    opt.innerText = city;
+                    citySelect.appendChild(opt);
+                });
+            }
+        }
+
+        document.getElementById("search-country").addEventListener("change", function(e){
+            populateCityDropdown(e.target.value);
+        });
 
         const siteTranslations = {
             en: {
@@ -92,7 +156,8 @@
                 optPurpose: "Sale or rent",
                 optSale: "For sale",
                 optRent: "For rent",
-                cityPlaceholder: "City (e.g. Dubai)",
+                optCountry: "Country",
+                optCity: "City",
                 optType: "Property type",
                 optVilla: "Villa",
                 optApartment: "Apartment",
@@ -114,7 +179,8 @@
                 optPurpose: "بيع أو إيجار",
                 optSale: "للبيع",
                 optRent: "للإيجار",
-                cityPlaceholder: "المدينة (مثال: دبي)",
+                optCountry: "الدولة",
+                optCity: "المدينة",
                 optType: "نوع العقار",
                 optVilla: "فيلا",
                 optApartment: "شقة",
@@ -141,7 +207,7 @@
             document.getElementById("optPurpose").innerText = t.optPurpose;
             document.getElementById("optSale").innerText = t.optSale;
             document.getElementById("optRent").innerText = t.optRent;
-            cityInput.placeholder = t.cityPlaceholder;
+            document.getElementById("optCountry").innerText = t.optCountry;
             document.getElementById("optType").innerText = t.optType;
             document.getElementById("optVilla").innerText = t.optVilla;
             document.getElementById("optApartment").innerText = t.optApartment;
@@ -158,6 +224,13 @@
                 loadingEl.innerText = t.loadingText;
             }
 
+            // Refresh the city placeholder text (and keep current selection if any)
+            const citySelect = document.getElementById("search-city");
+            const selectedCity = citySelect.value;
+            const selectedCountry = document.getElementById("search-country").value;
+            populateCityDropdown(selectedCountry);
+            citySelect.value = selectedCity;
+
             htmlRoot.setAttribute("lang", currentLang);
             htmlRoot.setAttribute("dir", currentLang === "ar" ? "rtl" : "ltr");
         }
@@ -168,6 +241,7 @@
             applySiteLanguage();
         }
 
+        populateCountryDropdown();
         applySiteLanguage();
     </script>
     <script src="js/nav-auth.js" defer></script>
