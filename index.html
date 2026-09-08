@@ -1,78 +1,175 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aqar | Real Estate Platform</title>
-
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        #langToggleBtn{
+            background:transparent;
+            border:1px solid currentColor;
+            color:inherit;
+            padding:6px 14px;
+            border-radius:6px;
+            cursor:pointer;
+            font-size:14px;
+            font-family:inherit;
+            margin-inline-start:12px;
+        }
+        html[dir="rtl"] .navbar nav{
+            direction:rtl;
+        }
+    </style>
 </head>
 <body>
-
     <header class="navbar">
         <div class="logo">Aqar</div>
         <nav>
-            <a href="index.html">Home</a>
-            <a href="properties.html">Properties</a>
+            <a href="index.html" id="navHome">Home</a>
+            <a href="properties.html" id="navProperties">Properties</a>
             <span id="nav-auth"></span>
+            <button id="langToggleBtn" onclick="toggleLanguage()">العربية</button>
         </nav>
     </header>
-
     <section class="hero">
         <div class="hero-content">
-            <h1>Find your next home in the UAE</h1>
-            <p>Browse verified listings for sale and for rent, from Palm Jumeirah villas to Ajman townhouses.</p>
-
+            <h1 id="heroTitle">Find your next home in the UAE</h1>
+            <p id="heroSubtitle">Browse verified listings for sale and for rent, from Palm Jumeirah villas to Ajman townhouses.</p>
             <form class="search-box" id="home-search">
                 <select id="search-purpose">
-                    <option value="">Sale or rent</option>
-                    <option value="sale">For sale</option>
-                    <option value="rent">For rent</option>
+                    <option value="" id="optPurpose">Sale or rent</option>
+                    <option value="sale" id="optSale">For sale</option>
+                    <option value="rent" id="optRent">For rent</option>
                 </select>
-
                 <input type="text" id="search-city" placeholder="City (e.g. Dubai)">
-
                 <select id="search-type">
-                    <option value="">Property type</option>
-                    <option value="Villa">Villa</option>
-                    <option value="Apartment">Apartment</option>
-                    <option value="Townhouse">Townhouse</option>
+                    <option value="" id="optType">Property type</option>
+                    <option value="Villa" id="optVilla">Villa</option>
+                    <option value="Apartment" id="optApartment">Apartment</option>
+                    <option value="Townhouse" id="optTownhouse">Townhouse</option>
                 </select>
-
-                <button type="submit" class="btn btn-primary">Search</button>
+                <button type="submit" class="btn btn-primary" id="searchBtn">Search</button>
             </form>
         </div>
     </section>
-
     <section class="section">
-        <h2 class="section-title">Featured properties</h2>
+        <h2 class="section-title" id="featuredTitle">Featured properties</h2>
         <div class="listing-grid" id="featured-grid">
-            <p class="listing-status">Loading properties…</p>
+            <p class="listing-status" id="loadingText">Loading properties…</p>
         </div>
     </section>
-
     <section class="cta">
-        <h2>List your property with Aqar</h2>
-        <p>Reach buyers and tenants across the UAE.</p>
-        <a href="register.html" class="btn btn-cta">Get started</a>
+        <h2 id="ctaTitle">List your property with Aqar</h2>
+        <p id="ctaSubtitle">Reach buyers and tenants across the UAE.</p>
+        <a href="register.html" class="btn btn-cta" id="ctaBtn">Get started</a>
     </section>
-
     <footer class="site-footer">
-        <p>&copy; 2026 Aqar. All rights reserved.</p>
+        <p id="footerText">&copy; 2026 Aqar. All rights reserved.</p>
         <div class="footer-social">
             <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
             <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
             <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
         </div>
     </footer>
+    <script>
+        const htmlRoot = document.getElementById("htmlRoot");
+        const cityInput = document.getElementById("search-city");
 
+        const siteTranslations = {
+            en: {
+                navHome: "Home",
+                navProperties: "Properties",
+                langToggleBtn: "العربية",
+                heroTitle: "Find your next home in the UAE",
+                heroSubtitle: "Browse verified listings for sale and for rent, from Palm Jumeirah villas to Ajman townhouses.",
+                optPurpose: "Sale or rent",
+                optSale: "For sale",
+                optRent: "For rent",
+                cityPlaceholder: "City (e.g. Dubai)",
+                optType: "Property type",
+                optVilla: "Villa",
+                optApartment: "Apartment",
+                optTownhouse: "Townhouse",
+                searchBtn: "Search",
+                featuredTitle: "Featured properties",
+                loadingText: "Loading properties…",
+                ctaTitle: "List your property with Aqar",
+                ctaSubtitle: "Reach buyers and tenants across the UAE.",
+                ctaBtn: "Get started",
+                footerText: "© 2026 Aqar. All rights reserved."
+            },
+            ar: {
+                navHome: "الرئيسية",
+                navProperties: "العقارات",
+                langToggleBtn: "English",
+                heroTitle: "اعثر على منزلك القادم في الإمارات",
+                heroSubtitle: "تصفح إعلانات موثقة للبيع والإيجار، من فلل نخلة جميرا إلى تاون هاوس عجمان.",
+                optPurpose: "بيع أو إيجار",
+                optSale: "للبيع",
+                optRent: "للإيجار",
+                cityPlaceholder: "المدينة (مثال: دبي)",
+                optType: "نوع العقار",
+                optVilla: "فيلا",
+                optApartment: "شقة",
+                optTownhouse: "تاون هاوس",
+                searchBtn: "بحث",
+                featuredTitle: "عقارات مميزة",
+                loadingText: "جارٍ تحميل العقارات…",
+                ctaTitle: "أدرج عقارك مع عقار",
+                ctaSubtitle: "تواصل مع المشترين والمستأجرين في جميع أنحاء الإمارات.",
+                ctaBtn: "ابدأ الآن",
+                footerText: "© 2026 عقار. جميع الحقوق محفوظة."
+            }
+        };
+
+        let currentLang = localStorage.getItem("aqar_lang") || "en";
+
+        function applySiteLanguage(){
+            const t = siteTranslations[currentLang];
+            document.getElementById("navHome").innerText = t.navHome;
+            document.getElementById("navProperties").innerText = t.navProperties;
+            document.getElementById("langToggleBtn").innerText = t.langToggleBtn;
+            document.getElementById("heroTitle").innerText = t.heroTitle;
+            document.getElementById("heroSubtitle").innerText = t.heroSubtitle;
+            document.getElementById("optPurpose").innerText = t.optPurpose;
+            document.getElementById("optSale").innerText = t.optSale;
+            document.getElementById("optRent").innerText = t.optRent;
+            cityInput.placeholder = t.cityPlaceholder;
+            document.getElementById("optType").innerText = t.optType;
+            document.getElementById("optVilla").innerText = t.optVilla;
+            document.getElementById("optApartment").innerText = t.optApartment;
+            document.getElementById("optTownhouse").innerText = t.optTownhouse;
+            document.getElementById("searchBtn").innerText = t.searchBtn;
+            document.getElementById("featuredTitle").innerText = t.featuredTitle;
+            document.getElementById("ctaTitle").innerText = t.ctaTitle;
+            document.getElementById("ctaSubtitle").innerText = t.ctaSubtitle;
+            document.getElementById("ctaBtn").innerText = t.ctaBtn;
+            document.getElementById("footerText").innerHTML = t.footerText;
+
+            const loadingEl = document.getElementById("loadingText");
+            if (loadingEl){
+                loadingEl.innerText = t.loadingText;
+            }
+
+            htmlRoot.setAttribute("lang", currentLang);
+            htmlRoot.setAttribute("dir", currentLang === "ar" ? "rtl" : "ltr");
+        }
+
+        function toggleLanguage(){
+            currentLang = currentLang === "en" ? "ar" : "en";
+            localStorage.setItem("aqar_lang", currentLang);
+            applySiteLanguage();
+        }
+
+        applySiteLanguage();
+    </script>
     <script src="js/nav-auth.js" defer></script>
     <script src="js/index.js" defer></script>
-
 </body>
 </html>
