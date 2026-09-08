@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" dir="ltr" id="htmlRoot">
 <head>
@@ -12,9 +11,112 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0d6efd">
+    <meta name="theme-color" // js/lang.js
+// Shared language + RTL support for all Aqar pages.
+// Usage: include this script on every page (before your page-specific script),
+// then mark translatable elements with data-i18n="key" instead of hardcoded text.
+//
+// Example:
+//   <h1 data-i18n="heroTitle">Find your next home in the UAE</h1>
+//   <button id="langToggleBtn" data-i18n="langToggleBtn" onclick="toggleLanguage()">العربية</button>
+//
+// For placeholder text (inputs) use data-i18n-placeholder="key" instead.
+
+const siteTranslations = {
+  en: {
+    navHome: "Home",
+    navProperties: "Properties",
+    langToggleBtn: "العربية",
+    heroTitle: "Find your next home in the UAE",
+    heroSubtitle: "Browse verified listings for sale and for rent, from Palm Jumeirah villas to Ajman townhouses.",
+    optPurpose: "Sale or rent",
+    optSale: "For sale",
+    optRent: "For rent",
+    optCountry: "Country",
+    optCity: "City",
+    optType: "Property type",
+    optVilla: "Villa",
+    optApartment: "Apartment",
+    optTownhouse: "Townhouse",
+    searchBtn: "Search",
+    featuredTitle: "Featured properties",
+    loadingText: "Loading properties…",
+    ctaTitle: "List your property with Aqar",
+    ctaSubtitle: "Reach buyers and tenants across the UAE.",
+    ctaBtn: "Get started",
+    footerText: "© 2026 Aqar. All rights reserved."
+  },
+  ar: {
+    navHome: "الرئيسية",
+    navProperties: "العقارات",
+    langToggleBtn: "English",
+    heroTitle: "اعثر على منزلك القادم في الإمارات",
+    heroSubtitle: "تصفح إعلانات موثقة للبيع والإيجار، من فلل نخلة جميرا إلى تاون هاوس عجمان.",
+    optPurpose: "بيع أو إيجار",
+    optSale: "للبيع",
+    optRent: "للإيجار",
+    optCountry: "الدولة",
+    optCity: "المدينة",
+    optType: "نوع العقار",
+    optVilla: "فيلا",
+    optApartment: "شقة",
+    optTownhouse: "تاون هاوس",
+    searchBtn: "بحث",
+    featuredTitle: "عقارات مميزة",
+    loadingText: "جارٍ تحميل العقارات…",
+    ctaTitle: "أدرج عقارك مع عقار",
+    ctaSubtitle: "تواصل مع المشترين والمستأجرين في جميع أنحاء الإمارات.",
+    ctaBtn: "ابدأ الآن",
+    footerText: "© 2026 عقار. جميع الحقوق محفوظة."
+  }
+};
+
+let currentLang = localStorage.getItem("aqar_lang") || "en";
+
+/**
+ * Applies the current language to every element on the page that has
+ * a data-i18n or data-i18n-placeholder attribute, and flips dir/lang
+ * on <html>. Safe to call on any page — pages with no matching elements
+ * simply do nothing for those keys.
+ */
+function applySiteLanguage() {
+  const t = siteTranslations[currentLang];
+  if (!t) return;
+
+  document.querySelectorAll("[data-i18n]").forEach(function (el) {
+    const key = el.getAttribute("data-i18n");
+    if (t[key] !== undefined) {
+      el.innerHTML = t[key];
+    }
+  });
+
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(function (el) {
+    const key = el.getAttribute("data-i18n-placeholder");
+    if (t[key] !== undefined) {
+      el.setAttribute("placeholder", t[key]);
+    }
+  });
+
+  const htmlRoot = document.getElementById("htmlRoot") || document.documentElement;
+  htmlRoot.setAttribute("lang", currentLang);
+  htmlRoot.setAttribute("dir", currentLang === "ar" ? "rtl" : "ltr");
+
+  // Let page-specific scripts react to a language change if they need to
+  // (e.g. re-populating a dropdown's placeholder option).
+  document.dispatchEvent(new CustomEvent("aqar:langchange", { detail: { lang: currentLang } }));
+}
+
+function toggleLanguage() {
+  currentLang = currentLang === "en" ? "ar" : "en";
+  localStorage.setItem("aqar_lang", currentLang);
+  applySiteLanguage();
+}
+
+document.addEventListener("DOMContentLoaded", applySiteLanguage);
+content="#0d6efd">
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <link rel="apple-touch-icon" href="icon-192.png">
+    <script src="js/lang.js" defer></script>
     <style>
         #langToggleBtn{
             background:transparent;
@@ -36,51 +138,51 @@
     <header class="navbar">
         <div class="logo">Aqar</div>
         <nav>
-            <a href="index.html" id="navHome">Home</a>
-            <a href="properties.html" id="navProperties">Properties</a>
+            <a href="index.html" id="navHome" data-i18n="navHome">Home</a>
+            <a href="properties.html" id="navProperties" data-i18n="navProperties">Properties</a>
             <span id="nav-auth"></span>
-            <button id="langToggleBtn" onclick="toggleLanguage()">العربية</button>
+            <button id="langToggleBtn" data-i18n="langToggleBtn" onclick="toggleLanguage()">العربية</button>
         </nav>
     </header>
     <section class="hero">
         <div class="hero-content">
-            <h1 id="heroTitle">Find your next home in the UAE</h1>
-            <p id="heroSubtitle">Browse verified listings for sale and for rent, from Palm Jumeirah villas to Ajman townhouses.</p>
+            <h1 id="heroTitle" data-i18n="heroTitle">Find your next home in the UAE</h1>
+            <p id="heroSubtitle" data-i18n="heroSubtitle">Browse verified listings for sale and for rent, from Palm Jumeirah villas to Ajman townhouses.</p>
             <form class="search-box" id="home-search">
                 <select id="search-purpose">
-                    <option value="" id="optPurpose">Sale or rent</option>
-                    <option value="sale" id="optSale">For sale</option>
-                    <option value="rent" id="optRent">For rent</option>
+                    <option value="" id="optPurpose" data-i18n="optPurpose">Sale or rent</option>
+                    <option value="sale" id="optSale" data-i18n="optSale">For sale</option>
+                    <option value="rent" id="optRent" data-i18n="optRent">For rent</option>
                 </select>
                 <select id="search-country">
-                    <option value="" id="optCountry">Country</option>
+                    <option value="" id="optCountry" data-i18n="optCountry">Country</option>
                 </select>
                 <select id="search-city">
-                    <option value="" id="optCity">City</option>
+                    <option value="" id="optCity" data-i18n="optCity">City</option>
                 </select>
                 <select id="search-type">
-                    <option value="" id="optType">Property type</option>
-                    <option value="Villa" id="optVilla">Villa</option>
-                    <option value="Apartment" id="optApartment">Apartment</option>
-                    <option value="Townhouse" id="optTownhouse">Townhouse</option>
+                    <option value="" id="optType" data-i18n="optType">Property type</option>
+                    <option value="Villa" id="optVilla" data-i18n="optVilla">Villa</option>
+                    <option value="Apartment" id="optApartment" data-i18n="optApartment">Apartment</option>
+                    <option value="Townhouse" id="optTownhouse" data-i18n="optTownhouse">Townhouse</option>
                 </select>
-                <button type="submit" class="btn btn-primary" id="searchBtn">Search</button>
+                <button type="submit" class="btn btn-primary" id="searchBtn" data-i18n="searchBtn">Search</button>
             </form>
         </div>
     </section>
     <section class="section">
-        <h2 class="section-title" id="featuredTitle">Featured properties</h2>
+        <h2 class="section-title" id="featuredTitle" data-i18n="featuredTitle">Featured properties</h2>
         <div class="listing-grid" id="featured-grid">
-            <p class="listing-status" id="loadingText">Loading properties…</p>
+            <p class="listing-status" id="loadingText" data-i18n="loadingText">Loading properties…</p>
         </div>
     </section>
     <section class="cta">
-        <h2 id="ctaTitle">List your property with Aqar</h2>
-        <p id="ctaSubtitle">Reach buyers and tenants across the UAE.</p>
-        <a href="register.html" class="btn btn-cta" id="ctaBtn">Get started</a>
+        <h2 id="ctaTitle" data-i18n="ctaTitle">List your property with Aqar</h2>
+        <p id="ctaSubtitle" data-i18n="ctaSubtitle">Reach buyers and tenants across the UAE.</p>
+        <a href="register.html" class="btn btn-cta" id="ctaBtn" data-i18n="ctaBtn">Get started</a>
     </section>
     <footer class="site-footer">
-        <p id="footerText">&copy; 2026 Aqar. All rights reserved.</p>
+        <p id="footerText" data-i18n="footerText">&copy; 2026 Aqar. All rights reserved.</p>
         <div class="footer-social">
             <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
             <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
@@ -88,8 +190,6 @@
         </div>
     </footer>
     <script>
-        const htmlRoot = document.getElementById("htmlRoot");
-
         // Cities grouped by Arab League country
         const arabCities = {
             "United Arab Emirates": ["Dubai","Abu Dhabi","Sharjah","Ajman","Ras Al Khaimah","Fujairah","Umm Al Quwain","Al Ain","Khor Fakkan","Dibba Al-Fujairah"],
@@ -150,103 +250,16 @@
             populateCityDropdown(e.target.value);
         });
 
-        const siteTranslations = {
-            en: {
-                navHome: "Home",
-                navProperties: "Properties",
-                langToggleBtn: "العربية",
-                heroTitle: "Find your next home in the UAE",
-                heroSubtitle: "Browse verified listings for sale and for rent, from Palm Jumeirah villas to Ajman townhouses.",
-                optPurpose: "Sale or rent",
-                optSale: "For sale",
-                optRent: "For rent",
-                optCountry: "Country",
-                optCity: "City",
-                optType: "Property type",
-                optVilla: "Villa",
-                optApartment: "Apartment",
-                optTownhouse: "Townhouse",
-                searchBtn: "Search",
-                featuredTitle: "Featured properties",
-                loadingText: "Loading properties…",
-                ctaTitle: "List your property with Aqar",
-                ctaSubtitle: "Reach buyers and tenants across the UAE.",
-                ctaBtn: "Get started",
-                footerText: "© 2026 Aqar. All rights reserved."
-            },
-            ar: {
-                navHome: "الرئيسية",
-                navProperties: "العقارات",
-                langToggleBtn: "English",
-                heroTitle: "اعثر على منزلك القادم في الإمارات",
-                heroSubtitle: "تصفح إعلانات موثقة للبيع والإيجار، من فلل نخلة جميرا إلى تاون هاوس عجمان.",
-                optPurpose: "بيع أو إيجار",
-                optSale: "للبيع",
-                optRent: "للإيجار",
-                optCountry: "الدولة",
-                optCity: "المدينة",
-                optType: "نوع العقار",
-                optVilla: "فيلا",
-                optApartment: "شقة",
-                optTownhouse: "تاون هاوس",
-                searchBtn: "بحث",
-                featuredTitle: "عقارات مميزة",
-                loadingText: "جارٍ تحميل العقارات…",
-                ctaTitle: "أدرج عقارك مع عقار",
-                ctaSubtitle: "تواصل مع المشترين والمستأجرين في جميع أنحاء الإمارات.",
-                ctaBtn: "ابدأ الآن",
-                footerText: "© 2026 عقار. جميع الحقوق محفوظة."
-            }
-        };
-
-        let currentLang = localStorage.getItem("aqar_lang") || "en";
-
-        function applySiteLanguage(){
-            const t = siteTranslations[currentLang];
-            document.getElementById("navHome").innerText = t.navHome;
-            document.getElementById("navProperties").innerText = t.navProperties;
-            document.getElementById("langToggleBtn").innerText = t.langToggleBtn;
-            document.getElementById("heroTitle").innerText = t.heroTitle;
-            document.getElementById("heroSubtitle").innerText = t.heroSubtitle;
-            document.getElementById("optPurpose").innerText = t.optPurpose;
-            document.getElementById("optSale").innerText = t.optSale;
-            document.getElementById("optRent").innerText = t.optRent;
-            document.getElementById("optCountry").innerText = t.optCountry;
-            document.getElementById("optType").innerText = t.optType;
-            document.getElementById("optVilla").innerText = t.optVilla;
-            document.getElementById("optApartment").innerText = t.optApartment;
-            document.getElementById("optTownhouse").innerText = t.optTownhouse;
-            document.getElementById("searchBtn").innerText = t.searchBtn;
-            document.getElementById("featuredTitle").innerText = t.featuredTitle;
-            document.getElementById("ctaTitle").innerText = t.ctaTitle;
-            document.getElementById("ctaSubtitle").innerText = t.ctaSubtitle;
-            document.getElementById("ctaBtn").innerText = t.ctaBtn;
-            document.getElementById("footerText").innerHTML = t.footerText;
-
-            const loadingEl = document.getElementById("loadingText");
-            if (loadingEl){
-                loadingEl.innerText = t.loadingText;
-            }
-
-            // Refresh the city placeholder text (and keep current selection if any)
-            const citySelect = document.getElementById("search-city");
-            const selectedCity = citySelect.value;
+        // Re-run city dropdown placeholder translation whenever the
+        // shared language module switches languages.
+        document.addEventListener("aqar:langchange", function(){
+            const selectedCity = document.getElementById("search-city").value;
             const selectedCountry = document.getElementById("search-country").value;
             populateCityDropdown(selectedCountry);
-            citySelect.value = selectedCity;
-
-            htmlRoot.setAttribute("lang", currentLang);
-            htmlRoot.setAttribute("dir", currentLang === "ar" ? "rtl" : "ltr");
-        }
-
-        function toggleLanguage(){
-            currentLang = currentLang === "en" ? "ar" : "en";
-            localStorage.setItem("aqar_lang", currentLang);
-            applySiteLanguage();
-        }
+            document.getElementById("search-city").value = selectedCity;
+        });
 
         populateCountryDropdown();
-        applySiteLanguage();
 
         // Register service worker for installable/offline support
         if ("serviceWorker" in navigator) {
