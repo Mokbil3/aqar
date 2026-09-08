@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" dir="ltr" id="htmlRoot">
 <head>
 <meta charset="utf-8">
 <title>Dashboard</title>
 <style>
 body{
-    font-family:Arial;
+    font-family:Arial, Tahoma, sans-serif;
     background:#f5f7fa;
     padding:30px;
 }
@@ -24,7 +24,7 @@ h1{
     font-weight:normal;
     color:#666;
 }
-#refreshBtn{
+#refreshBtn, #langBtn{
     background:#0d6efd;
     color:white;
     border:none;
@@ -32,6 +32,13 @@ h1{
     border-radius:8px;
     cursor:pointer;
     font-size:14px;
+    font-family:inherit;
+}
+#langBtn{
+    background:#495057;
+}
+#langBtn:hover{
+    background:#343a40;
 }
 #refreshBtn:hover{
     background:#0b5ed7;
@@ -91,6 +98,7 @@ h1{
     padding:6px 14px;
     border-radius:6px;
     cursor:pointer;
+    font-family:inherit;
 }
 .chart-card{
     background:white;
@@ -135,52 +143,56 @@ h1{
     color:#333;
     font-weight:bold;
 }
+html[dir="rtl"] .bar-value{
+    text-align:left;
+}
 </style>
 </head>
 <body>
 
 <h1>
-  Aqar Dashboard
+  <span id="titleText">Aqar Dashboard</span>
   <span class="header-right">
     <span id="lastUpdated">Loading...</span>
     <button id="refreshBtn" onclick="loadStats()">Refresh</button>
+    <button id="langBtn" onclick="toggleLanguage()">العربية</button>
   </span>
 </h1>
 
 <div id="errorBanner" class="error-banner">
   <span id="errorText">Something went wrong loading the dashboard.</span>
-  <button onclick="loadStats()">Try again</button>
+  <button onclick="loadStats()" id="retryBtn">Try again</button>
 </div>
 
 <div class="grid">
   <div class="box">
     <div id="users" class="number"><span class="skeleton"></span></div>
-    Users
+    <span id="usersLabel">Users</span>
   </div>
   <div class="box">
     <div id="properties" class="number"><span class="skeleton"></span></div>
-    Properties
+    <span id="propertiesLabel">Properties</span>
   </div>
   <div class="box">
     <div id="favorites" class="number"><span class="skeleton"></span></div>
-    Favorites
+    <span id="favoritesLabel">Favorites</span>
   </div>
 </div>
 
 <div class="chart-card">
-  <h2>Overview</h2>
+  <h2 id="overviewTitle">Overview</h2>
   <div class="bar-row">
-    <div class="bar-label">Users</div>
+    <div class="bar-label" id="bar-users-label">Users</div>
     <div class="bar-track"><div id="bar-users" class="bar-fill"></div></div>
     <div id="bar-users-val" class="bar-value">0</div>
   </div>
   <div class="bar-row">
-    <div class="bar-label">Properties</div>
+    <div class="bar-label" id="bar-properties-label">Properties</div>
     <div class="bar-track"><div id="bar-properties" class="bar-fill"></div></div>
     <div id="bar-properties-val" class="bar-value">0</div>
   </div>
   <div class="bar-row">
-    <div class="bar-label">Favorites</div>
+    <div class="bar-label" id="bar-favorites-label">Favorites</div>
     <div class="bar-track"><div id="bar-favorites" class="bar-fill"></div></div>
     <div id="bar-favorites-val" class="bar-value">0</div>
   </div>
@@ -192,6 +204,73 @@ const refreshBtn = document.getElementById("refreshBtn");
 const errorBanner = document.getElementById("errorBanner");
 const errorText = document.getElementById("errorText");
 const lastUpdated = document.getElementById("lastUpdated");
+const htmlRoot = document.getElementById("htmlRoot");
+
+const translations = {
+    en: {
+        title: "Aqar Dashboard",
+        refresh: "Refresh",
+        refreshing: "Refreshing...",
+        langBtn: "العربية",
+        users: "Users",
+        properties: "Properties",
+        favorites: "Favorites",
+        overview: "Overview",
+        retry: "Try again",
+        loading: "Loading...",
+        updateFailed: "Update failed",
+        updatedPrefix: "Updated ",
+        errorPrefix: "Couldn't load dashboard data: "
+    },
+    ar: {
+        title: "لوحة تحكم عقار",
+        refresh: "تحديث",
+        refreshing: "جارٍ التحديث...",
+        langBtn: "English",
+        users: "المستخدمون",
+        properties: "العقارات",
+        favorites: "المفضلة",
+        overview: "نظرة عامة",
+        retry: "إعادة المحاولة",
+        loading: "جارٍ التحميل...",
+        updateFailed: "فشل التحديث",
+        updatedPrefix: "آخر تحديث ",
+        errorPrefix: "تعذر تحميل بيانات اللوحة: "
+    }
+};
+
+let currentLang = localStorage.getItem("aqar_lang") || "en";
+let lastStats = null;
+
+function applyLanguage(){
+    const t = translations[currentLang];
+    document.getElementById("titleText").innerText = t.title;
+    document.getElementById("langBtn").innerText = t.langBtn;
+    document.getElementById("usersLabel").innerText = t.users;
+    document.getElementById("propertiesLabel").innerText = t.properties;
+    document.getElementById("favoritesLabel").innerText = t.favorites;
+    document.getElementById("overviewTitle").innerText = t.overview;
+    document.getElementById("bar-users-label").innerText = t.users;
+    document.getElementById("bar-properties-label").innerText = t.properties;
+    document.getElementById("bar-favorites-label").innerText = t.favorites;
+    document.getElementById("retryBtn").innerText = t.retry;
+    refreshBtn.innerText = t.refresh;
+
+    htmlRoot.setAttribute("lang", currentLang);
+    htmlRoot.setAttribute("dir", currentLang === "ar" ? "rtl" : "ltr");
+
+    if (lastStats){
+        lastUpdated.innerText = t.updatedPrefix + lastStats.time;
+    } else if (!errorBanner.style.display || errorBanner.style.display === "none"){
+        lastUpdated.innerText = t.loading;
+    }
+}
+
+function toggleLanguage(){
+    currentLang = currentLang === "en" ? "ar" : "en";
+    localStorage.setItem("aqar_lang", currentLang);
+    applyLanguage();
+}
 
 function showSkeletons(){
     document.getElementById("users").innerHTML = '<span class="skeleton"></span>';
@@ -207,13 +286,14 @@ function setBar(id, value, max){
 
 function formatTime(){
     const now = new Date();
-    return "Updated " + now.toLocaleTimeString();
+    return now.toLocaleTimeString();
 }
 
 async function loadStats() {
+    const t = translations[currentLang];
     errorBanner.style.display = "none";
     refreshBtn.disabled = true;
-    refreshBtn.innerText = "Refreshing...";
+    refreshBtn.innerText = t.refreshing;
     showSkeletons();
 
     try {
@@ -242,21 +322,23 @@ async function loadStats() {
         setBar("properties", properties, max);
         setBar("favorites", favorites, max);
 
-        lastUpdated.innerText = formatTime();
+        lastStats = { time: formatTime() };
+        lastUpdated.innerText = t.updatedPrefix + lastStats.time;
 
     } catch (err) {
-        errorText.innerText = "Couldn't load dashboard data: " + err.message;
+        errorText.innerText = t.errorPrefix + err.message;
         errorBanner.style.display = "flex";
         document.getElementById("users").innerText = "—";
         document.getElementById("properties").innerText = "—";
         document.getElementById("favorites").innerText = "—";
-        lastUpdated.innerText = "Update failed";
+        lastUpdated.innerText = t.updateFailed;
     } finally {
         refreshBtn.disabled = false;
-        refreshBtn.innerText = "Refresh";
+        refreshBtn.innerText = t.refresh;
     }
 }
 
+applyLanguage();
 loadStats();
 </script>
 </body>
