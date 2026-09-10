@@ -93,6 +93,14 @@ router.get("/search", async (req, res) => {
 
 // All Properties
 router.get("/", async (req, res) => {
+  // TEMPORARY DIAGNOSTIC — remove after confirming this code path runs
+  return res.json({
+    success: true,
+    diagnostic: "NEW CODE IS RUNNING",
+    count: 0,
+    properties: []
+  });
+
   try {
     const [properties] = await db.query(
       `${LISTING_SELECT} WHERE p.status = 'available' ORDER BY p.featured DESC, p.id DESC`
