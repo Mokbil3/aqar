@@ -39,7 +39,7 @@ function setupLoginForm() {
                 showMessage("Login successful — redirecting…", "success");
                 setTimeout(() => { window.location.href = "index.html"; }, 1000);
             } else {
-                showMessage(data.message || "Login failed", "error");
+                showMessage(data.message || data.error || "Login failed", "error");
                 button.disabled = false;
             }
         } catch (error) {
@@ -80,7 +80,7 @@ function setupRegisterForm() {
                 showMessage("Account created — redirecting…", "success");
                 setTimeout(() => { window.location.href = "index.html"; }, 1000);
             } else {
-                showMessage(data.message || "Registration failed", "error");
+                showMessage(data.message || data.error || "Registration failed", "error");
                 button.disabled = false;
             }
         } catch (error) {
