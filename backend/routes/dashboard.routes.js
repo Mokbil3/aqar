@@ -1,26 +1,26 @@
 import express from "express";
 import db from "../config/db.js";
+import requireAuth from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", requireAuth, async (req, res) => {
   try {
-    const [[users]] = await db.query(
-      "SELECT COUNT(*) AS total_users FROM users"
-    );
+    const userId = req.user.id;
 
     const [[properties]] = await db.query(
-      "SELECT COUNT(*) AS total_properties FROM properties"
+      "SELECT COUNT(*) AS total_properties FROM properties WHERE user_id = ?",
+      [userId]
     );
 
     const [[favorites]] = await db.query(
-      "SELECT COUNT(*) AS total_favorites FROM favorites"
+      "SELECT COUNT(*) AS total_favorites FROM favorites WHERE user_id = ?",
+      [userId]
     );
 
     res.json({
       success: true,
       stats: {
-        total_users: users.total_users,
         total_properties: properties.total_properties,
         total_favorites: favorites.total_favorites
       }
