@@ -44,6 +44,8 @@ app.get("/", async (req, res) => {
 /*
 |--------------------------------------------------------------------------
 | USERS TABLE
+| Matches columns used in auth.routes.js:
+| first_name, last_name, email, password_hash, role
 |--------------------------------------------------------------------------
 */
 
@@ -52,10 +54,11 @@ app.get("/create-users-table", async (req, res) => {
     await db.query(`
       CREATE TABLE IF NOT EXISTS users (
         id BIGINT PRIMARY KEY AUTO_INCREMENT,
-        full_name VARCHAR(255) NOT NULL,
+        first_name VARCHAR(255) NOT NULL,
+        last_name VARCHAR(255) NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
-        password VARCHAR(255) NOT NULL,
-        role ENUM('admin','agent','owner','buyer') DEFAULT 'buyer',
+        password_hash VARCHAR(255) NOT NULL,
+        role ENUM('admin','agent','owner','customer') DEFAULT 'customer',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
@@ -158,23 +161,10 @@ app.get("/create-property-images-table", async (req, res) => {
 
 /*
 |--------------------------------------------------------------------------
-| API ROUTES
-|--------------------------------------------------------------------------
-*/
-app.use("/api/dashboard", dashboardRoutes);
-app.use("/api/auth", authRoutes);
-app.use("/api/properties", propertyRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/favorites", favoriteRoutes);
-app.use("/api/property-images", propertyImageRoutes);
-
-/*
-|--------------------------------------------------------------------------
-| SERVER
+| FAVORITES TABLE
 |--------------------------------------------------------------------------
 */
 
-const PORT = process.env.PORT || 5000;
 app.get("/create-favorites-table", async (req, res) => {
   try {
     await db.query(`
@@ -197,6 +187,27 @@ app.get("/create-favorites-table", async (req, res) => {
     });
   }
 });
+
+/*
+|--------------------------------------------------------------------------
+| API ROUTES
+|--------------------------------------------------------------------------
+*/
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/properties", propertyRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/favorites", favoriteRoutes);
+app.use("/api/property-images", propertyImageRoutes);
+
+/*
+|--------------------------------------------------------------------------
+| SERVER
+|--------------------------------------------------------------------------
+*/
+
+const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
